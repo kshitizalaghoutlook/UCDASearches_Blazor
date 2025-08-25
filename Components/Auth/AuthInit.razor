@@ -1,7 +1,0 @@
-﻿@inject UCDASearches_Blazor.Security.ISimpleAuthService Auth
-@code {
-    protected override async Task OnInitializedAsync()
-    {
-        await Auth.RestoreAsync();
-    }
-}
