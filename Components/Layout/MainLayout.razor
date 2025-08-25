@@ -1,0 +1,78 @@
+﻿@inherits LayoutComponentBase
+@using MudBlazor
+@inject NavigationManager Nav
+
+<MudThemeProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+<MudPopoverProvider />
+
+<MudLayout>
+    <!-- TOP APP BAR -->
+    <MudAppBar Elevation="0" Class="bd-topbar">
+        <div class="bd-container">
+            <!-- Brand -->
+            <div class="bd-brand" @onclick="GoHome" title="Home">
+                <!-- Animated logo -->
+                <img src="images/UCDA_sm.gif"
+                     alt="UCDA Searches"
+                     class="bd-logo-img bd-logo-gif"
+                     loading="eager" decoding="async" />
+                <!-- Optional static fallback if you have one -->
+               @*  <img src="images/UCDA_sm.gif"
+                     alt=""
+                     aria-hidden="true"
+                     class="bd-logo-img bd-logo-static" />
+                <MudText Typo="Typo.h6" Class="bd-brand-text">
+                    bootstrap<span class="bd-bold">dash</span>
+                </MudText> *@
+            </div>
+
+
+            <!-- Desktop links -->
+            <nav class="bd-links">
+                <MudNavLink Href="/previoussearches" Class="bd-link">Previous Searches</MudNavLink>
+                <MudNavLink Href="/search" Class="bd-link">New Search</MudNavLink>
+                <MudNavLink Href="/blog" Class="bd-link">Blog</MudNavLink>
+                <MudNavLink Href="/offers" Class="bd-link">Offers</MudNavLink>
+            </nav>
+
+            <MudSpacer />
+
+            <!-- Right actions (desktop) -->
+            <div class="bd-actions">
+                <MudIconButton Icon="@Icons.Material.Filled.ShoppingCart" Color="Color.Default" Class="bd-cart" />
+                <MudButton Class="bd-login-btn" OnClick="GoLogin">Login/Register</MudButton>
+            </div>
+
+            <!-- Mobile hamburger (CSS only, no MudMenu) -->
+            <div class="bd-burger">
+                <input id="nav-toggle" type="checkbox" class="nav-toggle" />
+                <label for="nav-toggle" class="burger" title="Menu">
+                    <span></span><span></span><span></span>
+                </label>
+
+                <div class="mobile-menu">
+                    <MudNavLink Href="/previoussearches" Class="bd-link" @onclick="CloseMobile">Previous Searches</MudNavLink>
+                    <MudNavLink Href="/search" Class="bd-link" @onclick="CloseMobile">New Search</MudNavLink>
+                    <MudNavLink Href="/blog" Class="bd-link" @onclick="CloseMobile">Blog</MudNavLink>
+                    <MudNavLink Href="/offers" Class="bd-link" @onclick="CloseMobile">Offers</MudNavLink>
+                    <MudDivider Class="my-1" />
+                    <MudButton Class="bd-login-btn mt-1" OnClick="GoLogin">Login/Register</MudButton>
+                </div>
+            </div>
+        </div>
+    </MudAppBar>
+
+    <MudMainContent>
+        @Body
+    </MudMainContent>
+</MudLayout>
+
+@code {
+    private void GoHome() => Nav.NavigateTo("/");
+    private void GoLogin() => Nav.NavigateTo("/login");
+
+    // NOTE: after navigation, the page reload closes the mobile dropdown automatically.
+    private void CloseMobile() { /* no-op */ }
+}

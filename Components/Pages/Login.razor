@@ -1,0 +1,120 @@
+﻿@page "/"
+@page "/login"
+@rendermode InteractiveServer
+
+@using MudBlazor
+@inject NavigationManager Nav
+@inject UCDASearches_Blazor.Security.ISimpleAuthService Auth
+
+<div class="nextcloud-bg">
+    <!-- centered login card -->
+    <MudPaper Elevation="8" Class="nc-card">
+
+        <!-- logo -->
+        <div class="nc-logo">
+            <svg width="72" height="38" viewBox="0 0 144 76" fill="#ffffff" style="filter:drop-shadow(0 2px 2px rgba(0,0,0,.25))">
+                <circle cx="38" cy="38" r="18"></circle>
+                <circle cx="106" cy="38" r="18"></circle>
+                <circle cx="72" cy="38" r="18"></circle>
+            </svg>
+        </div>
+
+        <!-- title + subtitle -->
+        <MudText Typo="Typo.h6" Class="nc-title">Log in</MudText>
+        <MudText Typo="Typo.caption" Class="nc-subtle">
+            Enter your credentials
+        </MudText>
+
+        <!-- account number (used to query Requests table) -->
+        <MudTextField Class="nc-input mb-2"
+                      Label="Account Number"
+                      @bind-Value="_accountNumber"
+                      Variant="Variant.Outlined"
+                      AdornmentIcon="@Icons.Material.Filled.Badge" />
+
+        <!-- email -->
+        <MudTextField Class="nc-input mb-2"
+                      Label="Email"
+                      @bind-Value="_email"
+                      Variant="Variant.Outlined"
+                      AdornmentIcon="@Icons.Material.Filled.Person" />
+
+        <!-- password -->
+        <MudTextField Class="nc-input"
+                      Label="Password"
+                      @bind-Value="_password"
+                      Variant="Variant.Outlined"
+                      InputType="@(_show ? InputType.Text : InputType.Password)"
+                      Adornment="Adornment.End"
+                      AdornmentIcon="@(_show ? Icons.Material.Filled.VisibilityOff : Icons.Material.Filled.Visibility)"
+                      OnAdornmentClick="() => _show = !_show" />
+
+        @if (!string.IsNullOrWhiteSpace(_error))
+        {
+            <MudAlert Severity="Severity.Error" Dense="true" Class="mt-2">@_error</MudAlert>
+        }
+
+        <!-- login button -->
+        <MudButton Color="Color.Primary"
+                   Variant="Variant.Filled"
+                   Class="mt-2"
+                   FullWidth="true"
+                   StartIcon="@Icons.Material.Filled.ArrowForward"
+                   Disabled="_busy"
+                   OnClick="SignIn">
+            @(_busy ? "Signing in..." : "Log in")
+        </MudButton>
+
+        <!-- extras -->
+        <div class="nc-actions">
+            <MudLink Href="#" Color="Color.Default">Forgot password?</MudLink>
+            <MudLink Href="#" Color="Color.Default">Log in with a device</MudLink>
+        </div>
+    </MudPaper>
+
+    <!-- footer pill -->
+    <div class="nc-footer">
+        <strong>Nextcloud</strong> – a safe home for all your data<br />
+        <a href="#">Privacy policy</a>
+    </div>
+</div>
+
+@code {
+    private string _accountNumber = string.Empty; // <- passed to SimpleAuth
+    private string _email = string.Empty;
+    private string _password = string.Empty;
+    private bool _show;
+    private bool _busy;
+    private string? _error;
+
+    private async Task SignIn()
+    {
+        _error = null;
+        _busy = true;
+        try
+        {
+            // If account number was entered, use the 3-arg overload; otherwise the mapping in SimpleAuth
+            bool ok = string.IsNullOrWhiteSpace(_accountNumber)
+                ? await Auth.SignInAsync(_email, _password)
+                : await Auth.SignInAsync(_email, _password, _accountNumber);
+
+            if (ok)
+            {
+                // Go straight to Previous Searches which will use Auth.AccountNumber
+                Nav.NavigateTo("/search", forceLoad: false);
+            }
+            else
+            {
+                _error = "Invalid email / password (or account number).";
+            }
+        }
+        catch (Exception ex)
+        {
+            _error = $"Sign-in failed: {ex.Message}";
+        }
+        finally
+        {
+            _busy = false;
+        }
+    }
+}

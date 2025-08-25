@@ -1,0 +1,141 @@
+﻿@page "/search"
+@rendermode InteractiveServer
+@inject ISimpleAuthService Auth
+@inject NavigationManager Nav
+
+<MudContainer Class="mt-6">
+    <MudPaper Class="pa-4" Elevation="2">
+
+        <!-- Header row: title left, user info + button right -->
+        <MudGrid Class="mb-3" GutterSize="3">
+            <MudItem xs="12" md="6">
+                <MudText Typo="Typo.h6">VIN Search</MudText>
+            </MudItem>
+
+            <MudItem xs="12" md="6">
+                <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.FlexEnd" Spacing="2">
+                    @if (Auth.IsAuthenticated)
+                    {
+                        <MudAvatar Size="Size.Medium">@GetInitials(Auth.Email)</MudAvatar>
+                        <MudStack Spacing="0">
+                            <MudText Typo="Typo.body2">@Auth.Email</MudText>
+                            <MudText Typo="Typo.caption">Acct: @Auth.AccountNumber</MudText>
+                        </MudStack>
+                    }
+                    <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="AddRow">
+                        Add row
+                    </MudButton>
+                </MudStack>
+            </MudItem>
+        </MudGrid>
+
+        <MudTable Items="vinRows" Hover Dense Bordered Striped>
+            <HeaderContent>
+                <MudTh>VIN</MudTh>
+                <MudTh>Ontario Liens ($11.50)</MudTh>
+                <MudTh>Auto Check ($8.00)</MudTh>
+                <MudTh>Ontario History ($15.00)</MudTh>
+                <MudTh>Power Pack ($29.00)</MudTh>
+                <MudTh>Out of Province Lien</MudTh>
+                <MudTh>Carfax Canada ($46.35)</MudTh>
+                <MudTh>Export Check ($13.95)</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd>
+                    <MudTextField @bind-Value="@context.VIN"
+                                  Placeholder="Enter 17-char VIN"
+                                  MaxLength="17"
+                                  Variant="Variant.Outlined" />
+                </MudTd>
+                <MudTd><MudCheckBox T="bool" @bind-Checked="@context.OntarioLiens" Disabled="@context.PowerPack" /></MudTd>
+                <MudTd><MudCheckBox T="bool" @bind-Checked="@context.AutoCheck" Disabled="@context.PowerPack" /></MudTd>
+                <MudTd><MudCheckBox T="bool" @bind-Checked="@context.OntarioHistory" Disabled="@context.PowerPack" /></MudTd>
+                <MudTd><MudCheckBox T="bool" @bind-Checked="@context.PowerPack" Toggled="() => TogglePowerPack(context)" /></MudTd>
+                <MudTd><MudCheckBox T="bool" @bind-Checked="@context.OutOfProvinceLien" /></MudTd>
+                <MudTd><MudCheckBox T="bool" @bind-Checked="@context.CarfaxCanada" /></MudTd>
+                <MudTd><MudCheckBox T="bool" @bind-Checked="@context.ExportCheck" /></MudTd>
+            </RowTemplate>
+        </MudTable>
+
+        <MudDivider Class="my-4" />
+
+        <MudGrid>
+            <MudItem xs="12" md="6" Class="d-flex align-center">
+                <MudText Typo="Typo.subtitle1">
+                    Total:
+                    <MudChip T="string" Color="Color.Success" Variant="Variant.Filled" Class="ml-2">
+                        @TotalCost().ToString("C")
+                    </MudChip>
+                </MudText>
+            </MudItem>
+            <MudItem xs="12" md="6" Class="d-flex justify-end align-center">
+                <MudButton Color="Color.Primary" OnClick="SubmitSearch">
+                    Submit
+                </MudButton>
+            </MudItem>
+        </MudGrid>
+
+    </MudPaper>
+</MudContainer>
+
+@code {
+    public class VinRow
+    {
+        public string? VIN { get; set; }
+        public bool OntarioLiens { get; set; }
+        public bool AutoCheck { get; set; }
+        public bool OntarioHistory { get; set; }
+        public bool PowerPack { get; set; }
+        public bool OutOfProvinceLien { get; set; }
+        public bool CarfaxCanada { get; set; }
+        public bool ExportCheck { get; set; }
+    }
+
+    private List<VinRow> vinRows = new() { new(), new(), new() };
+    private void AddRow() => vinRows.Add(new());
+
+    private void TogglePowerPack(VinRow r)
+    {
+        if (r.PowerPack)
+        {
+            r.OntarioLiens = true;
+            r.AutoCheck = true;
+            r.OntarioHistory = true;
+        }
+    }
+
+    private decimal TotalCost()
+    {
+        decimal sum = 0m;
+        foreach (var r in vinRows)
+        {
+            if (r.PowerPack)
+                sum += 29.00m;
+            else
+            {
+                if (r.OntarioLiens) sum += 11.50m;
+                if (r.AutoCheck) sum += 8.00m;
+                if (r.OntarioHistory) sum += 15.00m;
+            }
+
+            if (r.OutOfProvinceLien) sum += 0.00m; // set price if needed
+            if (r.CarfaxCanada) sum += 46.35m;
+            if (r.ExportCheck) sum += 13.95m;
+        }
+        return sum;
+    }
+
+    private void SubmitSearch()
+    {
+        // TODO: await Http.PostAsJsonAsync("api/vin/check", vinRows);
+    }
+
+    private static string GetInitials(string? email)
+    {
+        if (string.IsNullOrWhiteSpace(email)) return "?";
+        var name = email.Split('@')[0].Replace('.', ' ').Replace('_', ' ');
+        var parts = name.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        if (parts.Length == 0) return email.Substring(0, 1).ToUpperInvariant();
+        return string.Concat(parts.Take(2).Select(p => char.ToUpperInvariant(p[0])));
+    }
+}
