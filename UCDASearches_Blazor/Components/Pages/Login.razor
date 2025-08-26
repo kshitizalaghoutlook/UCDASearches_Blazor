@@ -22,10 +22,7 @@
                 <MudTextField @bind-Value="model.AccountId" Label="Username or email" Variant="Variant.Outlined"
                               Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Badge" Required="true" />
                 <MudTextField @bind-Value="model.Password" Label="Password" Variant="Variant.Outlined"
-                              InputType="@(_showPwd ? InputType.Text : InputType.Password)"
-                              Adornment="Adornment.End"
-                              AdornmentIcon="@(_showPwd ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff)"
-                              OnAdornmentClick="@(()=> _showPwd = !_showPwd)" Required="true" />
+                              InputType="InputType.Password" Required="true" />
                 <MudButton Type="Submit" StartIcon="@Icons.Material.Filled.ArrowForward" Class="btn-primary" FullWidth="true">
                     Log in
                 </MudButton>
@@ -44,7 +41,6 @@
 </MudCard>
 
 @code {
-    private bool _showPwd;
     private string? error;
     private LoginModel model = new();
 
