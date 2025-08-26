@@ -16,14 +16,14 @@
 
         <MudText Typo="Typo.h6" Class="mt-2">Log in to Nextcloud</MudText>
 
-        <EditForm Model="@model" OnValidSubmit="HandleLogin" class="w-100">
+        <EditForm Model="@model" class="w-100" FormName="loginForm" @onsubmit:preventDefault="true">
             <DataAnnotationsValidator />
             <MudStack Spacing="2">
                 <MudTextField @bind-Value="model.AccountId" Label="Username or email" Variant="Variant.Outlined"
                               Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Badge" Required="true" />
                 <MudTextField @bind-Value="model.Password" Label="Password" Variant="Variant.Outlined"
                               InputType="InputType.Password" Required="true" />
-                <MudButton ButtonType="ButtonType.Submit" StartIcon="@Icons.Material.Filled.ArrowForward" Class="btn-primary" FullWidth="true">
+                <MudButton ButtonType="ButtonType.Button" OnClick="HandleLogin" StartIcon="@Icons.Material.Filled.ArrowForward" Class="btn-primary" FullWidth="true">
                     Log in
                 </MudButton>
             </MudStack>
