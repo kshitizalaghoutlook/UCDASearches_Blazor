@@ -19,7 +19,7 @@
         <EditForm Model="@model" OnValidSubmit="HandleLogin" class="w-100">
             <DataAnnotationsValidator />
             <MudStack Spacing="2">
-                <MudTextField @bind-Value="model.AccountId" Label="Account name or email" Variant="Variant.Outlined"
+                <MudTextField @bind-Value="model.AccountId" Label="Username or email" Variant="Variant.Outlined"
                               Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Badge" Required="true" />
                 <MudTextField @bind-Value="model.Password" Label="Password" Variant="Variant.Outlined"
                               InputType="@(_showPwd ? InputType.Text : InputType.Password)"
@@ -39,6 +39,7 @@
 
         <MudLink Href="#" Class="mt-2">Forgot password?</MudLink>
         <MudLink Href="#">Log in with a device</MudLink>
+        <MudLink Href="#">Log in with a backup code</MudLink>
     </MudStack>
 </MudCard>
 
