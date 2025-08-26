@@ -1,5 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap');
+
 h1:focus {
     outline: none;
+}
+
+html, body, button, input, select, textarea {
+    font-family: 'Open Sans', sans-serif;
 }
 
 .valid.modified:not([type=checkbox]) {
@@ -35,7 +41,7 @@ h1:focus {
     width: 100%;
     position: relative;
     overflow: hidden;
-    background: radial-gradient(45rem 18rem at 50% 105%, rgba(255,255,255,.25), transparent 60%), radial-gradient(120rem 40rem at 50% 120%, rgba(255,255,255,.35), transparent 55%), linear-gradient(180deg,#0f6db3 0%, #0b5d9a 30%, #094a7d 70%, #07375f 100%);
+    background: radial-gradient(45rem 18rem at 50% 105%, rgba(255,255,255,.25), transparent 60%), radial-gradient(120rem 40rem at 50% 120%, rgba(255,255,255,.35), transparent 55%), linear-gradient(180deg,#0082c9 0%, #0075b4 30%, #005a8c 70%, #004a70 100%);
 }
 
     .nc-bg::after {
@@ -67,9 +73,29 @@ h1:focus {
     background: rgba(255,255,255,.96);
 }
 
+
 .btn-primary {
-    background: #135ea1 !important;
+    background: #0082c9 !important;
     color: #fff !important;
+}
+
+.btn-primary:hover {
+    background: #0094e0 !important;
+}
+
+.btn-primary:active {
+    background: #006ba8 !important;
+}
+
+a {
+    color: #0082c9;
+    margin: 0 0.25rem;
+    text-decoration: none;
+}
+
+a:hover,
+a:focus {
+    text-decoration: underline;
 }
 
 /* Keep inline SVG small even if a global rule targets svg */
