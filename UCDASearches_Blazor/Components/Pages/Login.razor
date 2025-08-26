@@ -1,15 +1,14 @@
 ﻿@page "/"
 @page "/login"
-@layout UCDASearches_Blazor.Components.Layout.AuthLayout
+@layout AuthLayout
 @using System.ComponentModel.DataAnnotations
 @inject NavigationManager Nav
 @inject SimpleAuthStateProvider Auth
 @inject IRequestsRepository Repo
 
-<MudCard Class="nc-card p-6">
+<MudCard Class="nc-card" Style="padding:24px">
     <MudStack Spacing="2" AlignItems="AlignItems.Center">
-        <!-- Simple 3-circle mark to echo the Nextcloud feel (no branding) -->
-        <svg width="90" height="48" viewBox="0 0 90 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 0 90 48" xmlns="http://www.w3.org/2000/svg">
             <circle cx="18" cy="24" r="12" stroke="#135ea1" stroke-width="8" />
             <circle cx="45" cy="24" r="12" stroke="#135ea1" stroke-width="8" />
             <circle cx="72" cy="24" r="12" stroke="#135ea1" stroke-width="8" />
@@ -17,23 +16,16 @@
 
         <MudText Typo="Typo.h6" Class="mt-2">Log in</MudText>
 
-        <EditForm Model="@model" OnValidSubmit="HandleLogin" Class="w-full">
+        <EditForm Model="@model" OnValidSubmit="HandleLogin" class="w-100">
             <DataAnnotationsValidator />
             <MudStack Spacing="2">
-                <MudTextField @bind-Value="model.AccountId"
-                              Label="Account name or email"
-                              Variant="Variant.Outlined"
-                              Adornment="Adornment.Start"
-                              AdornmentIcon="@Icons.Material.Filled.Badge"
-                              Required="true" />
-                <MudTextField @bind-Value="model.Password"
-                              Label="Password"
-                              Variant="Variant.Outlined"
+                <MudTextField @bind-Value="model.AccountId" Label="Account name or email" Variant="Variant.Outlined"
+                              Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Badge" Required="true" />
+                <MudTextField @bind-Value="model.Password" Label="Password" Variant="Variant.Outlined"
                               InputType="@(_showPwd ? InputType.Text : InputType.Password)"
                               Adornment="Adornment.End"
                               AdornmentIcon="@(_showPwd ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff)"
-                              OnAdornmentClick="@(()=> _showPwd = !_showPwd)"
-                              Required="true" />
+                              OnAdornmentClick="@(()=> _showPwd = !_showPwd)" Required="true" />
                 <MudButton Type="Submit" StartIcon="@Icons.Material.Filled.ArrowForward" Class="btn-primary" FullWidth="true">
                     Log in
                 </MudButton>
@@ -42,11 +34,11 @@
 
         @if (!string.IsNullOrWhiteSpace(error))
         {
-            <MudAlert Severity="Severity.Error" Class="w-full mt-2">@error</MudAlert>
+            <MudAlert Severity="Severity.Error" Class="w-100 mt-2">@error</MudAlert>
         }
 
         <MudLink Href="#" Class="mt-2">Forgot password?</MudLink>
-        <MudLink Href="#" Class="">Log in with a device</MudLink>
+        <MudLink Href="#">Log in with a device</MudLink>
     </MudStack>
 </MudCard>
 
@@ -62,16 +54,8 @@
 
         var ok = await Repo.ValidateLoginAsync(model.AccountId.Trim(), model.Password);
         if (ok)
-        {
-            await Auth.SignInAsync(new AuthUser(model.AccountId.Trim(), null));
-            Nav.NavigateTo("/previous-searches");
-        }
+        { await Auth.SignInAsync(new AuthUser(model.AccountId.Trim(), null)); Nav.NavigateTo("/previous-searches"); }
         else error = "Invalid credentials.";
     }
-
-    public class LoginModel
-    {
-        [Required] public string AccountId { get; set; } = "";
-        [Required] public string Password { get; set; } = "";
-    }
+    public class LoginModel { [Required] public string AccountId { get; set; } = ""; [Required] public string Password { get; set; } = ""; }
 }

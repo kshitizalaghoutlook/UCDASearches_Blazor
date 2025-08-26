@@ -29,24 +29,36 @@ h1:focus {
 }
 
 
-/* Nextcloud-like sky + horizon */
+/* Nextcloud-like background */
 .nc-bg {
     min-height: 100vh;
-    background: radial-gradient(45rem 18rem at 50% 105%, rgba(255,255,255,.25), transparent 60%), radial-gradient(120rem 40rem at 50% 120%, rgba(255,255,255,.35), transparent 55%), linear-gradient(180deg,#0f6db3 0%, #0b5d9a 30%, #094a7d 70%, #07375f 100%);
+    width: 100%;
     position: relative;
     overflow: hidden;
+    background: radial-gradient(45rem 18rem at 50% 105%, rgba(255,255,255,.25), transparent 60%), radial-gradient(120rem 40rem at 50% 120%, rgba(255,255,255,.35), transparent 55%), linear-gradient(180deg,#0f6db3 0%, #0b5d9a 30%, #094a7d 70%, #07375f 100%);
 }
 
-    .nc-bg:after { /* horizon glow */
+    .nc-bg::after {
         content: "";
         position: absolute;
-        inset: auto 0 0 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
         height: 30vh;
         background: radial-gradient(120rem 28rem at 50% 120%, rgba(255,255,255,.9), rgba(255,255,255,0) 60%);
         pointer-events: none;
     }
 
-/* Card styling */
+/* Center container */
+.nc-center {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+/* Card + button */
 .nc-card {
     width: 100%;
     max-width: 420px;
@@ -55,8 +67,13 @@ h1:focus {
     background: rgba(255,255,255,.96);
 }
 
-/* Blue action button */
 .btn-primary {
     background: #135ea1 !important;
     color: #fff !important;
+}
+
+/* Keep inline SVG small even if a global rule targets svg */
+.nc-card svg {
+    width: 90px;
+    height: 48px;
 }
