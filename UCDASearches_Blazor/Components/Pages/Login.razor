@@ -14,12 +14,12 @@
             <circle cx="72" cy="24" r="12" stroke="#135ea1" stroke-width="8" />
         </svg>
 
-        <MudText Typo="Typo.h6" Class="mt-2">Log in</MudText>
+        <MudText Typo="Typo.h6" Class="mt-2">Log in to Nextcloud</MudText>
 
         <EditForm Model="@model" OnValidSubmit="HandleLogin" class="w-100">
             <DataAnnotationsValidator />
             <MudStack Spacing="2">
-                <MudTextField @bind-Value="model.AccountId" Label="Account name or email" Variant="Variant.Outlined"
+                <MudTextField @bind-Value="model.AccountId" Label="Username or email" Variant="Variant.Outlined"
                               Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Badge" Required="true" />
                 <MudTextField @bind-Value="model.Password" Label="Password" Variant="Variant.Outlined"
                               InputType="@(_showPwd ? InputType.Text : InputType.Password)"
@@ -39,6 +39,7 @@
 
         <MudLink Href="#" Class="mt-2">Forgot password?</MudLink>
         <MudLink Href="#">Log in with a device</MudLink>
+        <MudLink Href="#">Log in with a backup code</MudLink>
     </MudStack>
 </MudCard>
 
